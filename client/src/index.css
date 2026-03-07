@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* True OLED Black */
+  --bg-dark: #000000;
+  --bg-surface: #0a0a0c;
+  --bg-elevated: #121214;
+
+  /* High Contrast Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  /* zinc-400 */
+  --text-muted: #52525b;
+  /* zinc-600 */
+
+  /* Acidic Accents (CRED style) */
+  --accent-lime: #d4ff00;
+  --accent-cyan: #00ffcc;
+  --accent-rose: #ff2a5f;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 255, 255, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-black text-white antialiased font-sans selection:bg-white selection:text-black;
+    /* Subtle noise/grain texture overlay for premium feel */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    background-color: var(--bg-dark);
+  }
+
+  /* Typography System */
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.04em;
+  }
+}
+
+@layer components {
+
+  /* Premium Fintech Cards */
+  .surface-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .surface-card:hover {
+    border-color: var(--border-focus);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Minimalist Buttons */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center font-display font-medium overflow-hidden rounded-xl transition-all duration-300;
+    background: white;
+    color: black;
+    padding: 12px 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .btn-primary:hover {
+    @apply bg-gray-200 transform scale-[0.98];
+  }
+
+  /* Acidic Accent Button */
+  .btn-accent {
+    @apply relative inline-flex items-center justify-center font-display font-medium overflow-hidden rounded-xl transition-all duration-300;
+    background: var(--accent-lime);
+    color: black;
+    padding: 12px 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .btn-accent:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 20px rgba(212, 255, 0, 0.4);
+    transform: scale-[0.98];
+  }
+
+  /* Layout */
+  .app-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .app-sidebar {
+    width: 280px;
+    position: fixed;
+    height: 100vh;
+    border-right: 1px solid var(--border-subtle);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+  }
+
+  .app-main {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+  }
+}
+
+/* Animations */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scrollbar styling - pure minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}

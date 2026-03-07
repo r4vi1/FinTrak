@@ -1,0 +1,24 @@
+{
+  "name": "fintrak",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "db:migrate": "npx knex migrate:latest --knexfile server/db/knexfile.js",
+    "db:seed": "npx knex seed:run --knexfile server/db/knexfile.js",
+    "db:rollback": "npx knex migrate:rollback --knexfile server/db/knexfile.js --all",
+    "db:reset": "npm run db:rollback && npm run db:migrate && npm run db:seed",
+    "server": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.6.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "knex": "^3.1.0"
+  }
+}
