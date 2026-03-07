@@ -4,38 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* True OLED Black */
-  --bg-dark: #000000;
-  --bg-surface: #0a0a0c;
-  --bg-elevated: #121214;
-
-  /* High Contrast Text */
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  /* zinc-400 */
-  --text-muted: #52525b;
-  /* zinc-600 */
-
-  /* Acidic Accents (CRED style) */
-  --accent-lime: #d4ff00;
-  --accent-cyan: #00ffcc;
-  --accent-rose: #ff2a5f;
-
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(255, 255, 255, 0.2);
-}
-
 @layer base {
   body {
-    @apply bg-black text-white antialiased font-sans selection:bg-white selection:text-black;
-    /* Subtle noise/grain texture overlay for premium feel */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    @apply bg-background text-white antialiased font-sans selection:bg-accent-lime selection:text-black;
+    /* Noise texture overlay */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
     background-color: var(--bg-dark);
   }
 
-  /* Typography System */
   h1,
   h2,
   h3,
@@ -48,106 +24,113 @@
 
 @layer components {
 
-  /* Premium Fintech Cards */
+  /* Patterned Backgrounds for Contrast */
+  .pattern-grid {
+    background-size: 30px 30px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  .pattern-dots {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Premium Cards */
   .surface-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 20px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply relative overflow-hidden bg-surface border-border border rounded-3xl transition-all duration-500 ease-out;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .surface-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
   }
 
   .surface-card:hover {
-    border-color: var(--border-focus);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    @apply border-zinc-700 bg-elevated;
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   }
 
-  /* Minimalist Buttons */
-  .btn-primary {
-    @apply relative inline-flex items-center justify-center font-display font-medium overflow-hidden rounded-xl transition-all duration-300;
-    background: white;
-    color: black;
-    padding: 12px 24px;
-    letter-spacing: -0.02em;
+  .surface-card:hover::before {
+    transform: translateX(100%);
   }
 
-  .btn-primary:hover {
-    @apply bg-gray-200 transform scale-[0.98];
-  }
-
-  /* Acidic Accent Button */
+  /* High Contrast Accent Button */
   .btn-accent {
-    @apply relative inline-flex items-center justify-center font-display font-medium overflow-hidden rounded-xl transition-all duration-300;
-    background: var(--accent-lime);
-    color: black;
-    padding: 12px 24px;
-    letter-spacing: -0.02em;
+    @apply relative overflow-hidden inline-flex items-center justify-center font-display font-bold uppercase tracking-wider rounded-full transition-all duration-300;
+    background: var(--accent-lime, #d4ff00);
+    color: #000;
+    padding: 14px 28px;
+    box-shadow: 0 4px 14px 0 rgba(212, 255, 0, 0.39);
+  }
+
+  .btn-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
   }
 
   .btn-accent:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 0 20px rgba(212, 255, 0, 0.4);
-    transform: scale-[0.98];
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 255, 0, 0.6);
+  }
+
+  .btn-accent:hover::before {
+    transform: translateX(100%);
   }
 
   /* Layout */
   .app-layout {
     display: flex;
     min-height: 100vh;
+    @apply bg-background;
   }
 
   .app-sidebar {
-    width: 280px;
     position: fixed;
     height: 100vh;
-    border-right: 1px solid var(--border-subtle);
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     display: flex;
     flex-direction: column;
     z-index: 50;
-  }
-
-  .app-main {
-    flex: 1;
-    margin-left: 280px;
-    padding: 2rem 3rem;
+    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 }
 
 /* Animations */
+.animate-in {
+  animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @keyframes slideUpFade {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px) scale(0.98);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-.animate-in {
-  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Scrollbar styling - pure minimal */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+/* Textures */
+.text-edge {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+  color: transparent;
 }
