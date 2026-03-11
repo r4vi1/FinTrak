@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# builds
+client/dist/
+client/build/
+server/dist/
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# databases (local dev)
+server/db/*.db
+server/db/*.sqlite
+server/db/*.sqlite3
+
+# editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# os
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+
+# testing
+coverage/
+
+# misc
+.gemini/

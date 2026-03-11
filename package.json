@@ -10,10 +10,14 @@
     "server": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["personal-finance", "india", "account-aggregator", "dashboard", "budgeting"],
+  "author": "Ravi Varma <r4vi.varma@gmail.com>",
+  "license": "MIT",
+  "description": "Cross-account personal finance dashboard for India",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/r4vi1/FinTrak.git"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.6.2",

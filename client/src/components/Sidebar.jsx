@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, WalletCards, Activity, Layers, LogOut, ChevronLeft, ChevronRight, Fingerprint } from "lucide-react";
+import { LayoutDashboard, WalletCards, Activity, Layers, LogOut, ChevronLeft, ChevronRight, Fingerprint, Tags } from "lucide-react";
 import { cn } from "../lib/utils";
 
 const NAV_ITEMS = [
     { path: "/", icon: LayoutDashboard, label: "Overview" },
     { path: "/transactions", icon: WalletCards, label: "Transactions" },
+    { path: "/categories", icon: Tags, label: "Categories" },
     { path: "/analytics", icon: Activity, label: "Insights" },
     { path: "/accounts", icon: Layers, label: "Linked Accounts" },
 ];
 
-export default function Sidebar() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+export default function Sidebar({ isCollapsed, setIsCollapsed }) {
 
     return (
         <aside
