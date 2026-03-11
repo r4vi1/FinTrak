@@ -42,8 +42,7 @@ function App() {
         <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
         {/* Main content gracefully handles the sibling's width changes */}
-        <main className={`flex-1 w-full transition-all duration-400 ease-in-out ${isCollapsed ? 'pl-[88px]' : 'pl-[280px]'}`}>
-          <div className="max-w-[1400px] mx-auto p-8 lg:p-12 relative z-10">
+<main className={`flex-1 w-full transition-all duration-400 ease-in-out ${isCollapsed ? 'md:pl-[88px]' : 'md:pl-[280px]'}`}>          <div className="max-w-[1400px] mx-auto p-8 lg:p-12 relative z-10">
             <Routes>
               <Route path="/" element={<DashboardLayout />} />
               <Route path="/transactions" element={<Transactions />} />

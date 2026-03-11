@@ -15,11 +15,11 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
 
     return (
         <aside
-            className={cn(
-                "app-sidebar py-6 px-4",
-                isCollapsed ? "w-[88px]" : "w-[280px]"
-            )}
-        >
+    className={cn(
+        "app-sidebar py-6 px-4 hidden md:flex flex-col",
+        isCollapsed ? "w-[88px]" : "w-[280px]"
+    )}
+>
             {/* Collapse Toggle */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
