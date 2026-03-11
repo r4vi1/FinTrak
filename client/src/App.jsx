@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 
 import DashboardLayout from "./components/DashboardLayout";
@@ -11,14 +11,25 @@ import Analytics from "./pages/Analytics";
 const Accounts = () => (
   <div className="animate-in pt-8">
     <h1 className="text-5xl font-display font-bold tracking-tighter mb-4 text-edge">ACCOUNTS</h1>
+    <p className="text-zinc-500 font-medium">Account linking via Setu AA coming soon.</p>
   </div>
 );
+
+/* Scroll to top on route change */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
+  return null;
+}
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="app-layout relative overflow-hidden bg-background">
 
         {/* Global Light Leaks */}

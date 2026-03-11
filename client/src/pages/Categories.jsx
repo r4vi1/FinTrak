@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Tag, Settings2, Trash2, X, PlusCircle, AlertCircle } from "lucide-react";
+import { Plus, Tag, Settings2, Trash2, X, PlusCircle, CheckCircle, AlertCircle } from "lucide-react";
 import { useCategories } from "../hooks/useApi";
 import { formatCurrency } from "../lib/utils";
 
@@ -7,12 +7,69 @@ const PRESET_COLORS = [
     "#a855f7", "#06b6d4", "#22c55e", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#14b8a6"
 ];
 
+/* Skeleton card matching category card shape */
+function CategorySkeleton() {
+    return (
+        <div className="surface-card p-6 flex flex-col">
+            <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="skeleton w-10 h-10 rounded-xl" />
+                    <div className="space-y-2">
+                        <div className="skeleton h-5 w-28 rounded-lg" />
+                        <div className="skeleton h-3 w-16 rounded-lg" />
+                    </div>
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 my-4 flex-1">
+                <div className="skeleton h-16 rounded-xl" />
+                <div className="skeleton h-16 rounded-xl" />
+            </div>
+            <div className="pt-4 border-t border-white/5">
+                <div className="skeleton h-3 w-24 rounded-lg" />
+            </div>
+        </div>
+    );
+}
+
+/* Styled inline confirm dialog */
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+    return (
+        <div className="confirm-overlay" onClick={onCancel}>
+            <div className="confirm-dialog" onClick={e => e.stopPropagation()}>
+                <div className="flex items-start gap-3 mb-6">
+                    <AlertCircle className="text-accent-rose shrink-0 mt-0.5" size={22} />
+                    <div>
+                        <h3 className="font-display font-bold text-lg mb-1">Are you sure?</h3>
+                        <p className="text-zinc-400 text-sm">{message}</p>
+                    </div>
+                </div>
+                <div className="flex justify-end gap-3">
+                    <button
+                        onClick={onCancel}
+                        className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold hover:bg-white/10 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className="px-5 py-2 rounded-xl bg-accent-rose/20 border border-accent-rose/30 text-accent-rose text-sm font-bold hover:bg-accent-rose/30 transition-colors"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function Categories() {
     const { data, isLoading, error, refetch } = useCategories();
     const categories = data?.categories || [];
 
     const [isCreating, setIsCreating] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [feedback, setFeedback] = useState(null); // { type: 'success' | 'error', message }
+    const [confirmDelete, setConfirmDelete] = useState(null); // category id to delete
 
     // Form State
     const [name, setName] = useState("");
@@ -33,6 +90,11 @@ export default function Categories() {
 
     const removeRule = (index) => {
         setRules(rules.filter((_, i) => i !== index));
+    };
+
+    const showFeedback = (type, message) => {
+        setFeedback({ type, message });
+        setTimeout(() => setFeedback(null), 3000);
     };
 
     const handleSubmit = async (e) => {
@@ -58,30 +120,31 @@ export default function Categories() {
             setColor(PRESET_COLORS[0]);
             setRules([]);
             setIsCreating(false);
+            showFeedback('success', `Category "${name}" created${validRules.length > 0 ? ' and transactions auto-tagged' : ''}`);
             refetch();
         } catch (err) {
-            alert(err.message);
+            showFeedback('error', err.message);
         } finally {
             setSubmitting(false);
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Delete this category? Transactions will be uncategorized.")) return;
-
         try {
             const response = await fetch(`${API_URL}/${id}`, {
                 method: "DELETE"
             });
             if (response.ok) {
+                showFeedback('success', 'Category deleted');
                 refetch();
             } else {
                 const res = await response.json();
-                alert(res.error);
+                showFeedback('error', res.error);
             }
         } catch (err) {
-            console.error(err);
+            showFeedback('error', err.message);
         }
+        setConfirmDelete(null);
     };
 
     return (
@@ -101,9 +164,17 @@ export default function Categories() {
                 )}
             </div>
 
+            {/* Inline Feedback Toast */}
+            {feedback && (
+                <div className={`mb-6 ${feedback.type === 'success' ? 'toast-success' : 'toast-error'}`}>
+                    {feedback.type === 'success' ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
+                    {feedback.message}
+                </div>
+            )}
+
             {/* Creation Form (Inline) */}
             {isCreating && (
-                <div className="surface-card p-6 md:p-8 rounded-2xl mb-8 border border-accent-lime/20 relative animate-in slide-in-from-top-4">
+                <div className="surface-card p-6 md:p-8 rounded-2xl mb-8 border border-accent-lime/20 relative" style={{ animation: 'scalePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
                     <button onClick={() => setIsCreating(false)} className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
                         <X size={20} />
                     </button>
@@ -134,7 +205,7 @@ export default function Categories() {
                                             key={c}
                                             type="button"
                                             onClick={() => setColor(c)}
-                                            className={`w-10 h-10 rounded-full cursor-pointer transition-transform ${color === c ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]' : 'hover:scale-110'}`}
+                                            className={`w-10 h-10 rounded-full cursor-pointer transition-all duration-200 ${color === c ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]' : 'hover:scale-110'}`}
                                             style={{ backgroundColor: c }}
                                         />
                                     ))}
@@ -163,7 +234,7 @@ export default function Categories() {
                             ) : (
                                 <div className="space-y-3">
                                     {rules.map((rule, idx) => (
-                                        <div key={idx} className="flex flex-col sm:flex-row gap-3 items-center bg-zinc-900/50 p-2 md:p-3 rounded-xl border border-white/5 relative group">
+                                        <div key={idx} className="flex flex-col sm:flex-row gap-3 items-center bg-zinc-900/50 p-2 md:p-3 rounded-xl border border-white/5 relative group stagger-in" style={{ animationDelay: `${idx * 50}ms` }}>
                                             <span className="font-bold text-zinc-500 w-6 text-center hidden sm:block">IF</span>
 
                                             <select
@@ -218,18 +289,20 @@ export default function Categories() {
 
             {/* Category List */}
             {isLoading ? (
-                <div className="text-center py-12 text-zinc-500 font-medium animate-pulse">Loading categories...</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[...Array(6)].map((_, i) => <CategorySkeleton key={i} />)}
+                </div>
             ) : error ? (
                 <div className="text-center py-12 text-accent-rose font-medium">Failed to load categories: {error}</div>
             ) : categories.length === 0 ? (
                 <div className="text-center py-12 text-zinc-500 font-medium surface-card rounded-2xl">No custom categories found.</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {categories.map(cat => (
-                        <div key={cat.id} className="surface-card p-6 flex flex-col hover:border-white/10 transition-colors group">
+                    {categories.map((cat, idx) => (
+                        <div key={cat.id} className={`surface-card p-6 flex flex-col hover:border-white/10 transition-colors group stagger-in stagger-in-${Math.min(idx + 1, 8)}`}>
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${cat.color}20`, color: cat.color }}>
+                                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110" style={{ backgroundColor: `${cat.color}20`, color: cat.color }}>
                                         <Tag size={20} />
                                     </div>
                                     <div>
@@ -242,7 +315,7 @@ export default function Categories() {
                                 </div>
                                 {!cat.is_system && (
                                     <button
-                                        onClick={() => handleDelete(cat.id)}
+                                        onClick={() => setConfirmDelete(cat.id)}
                                         className="text-zinc-600 hover:text-accent-rose opacity-0 group-hover:opacity-100 transition-all p-1"
                                         title="Delete Category"
                                     >
@@ -271,6 +344,15 @@ export default function Categories() {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Confirm Delete Dialog */}
+            {confirmDelete && (
+                <ConfirmDialog
+                    message="This will remove the category and uncategorize all associated transactions."
+                    onConfirm={() => handleDelete(confirmDelete)}
+                    onCancel={() => setConfirmDelete(null)}
+                />
             )}
         </div>
     );

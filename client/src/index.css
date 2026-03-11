@@ -20,6 +20,34 @@
     font-family: 'Space Grotesk', sans-serif;
     letter-spacing: -0.04em;
   }
+
+  /* ── Focus Rings ─────────────────────────────────── */
+  *:focus-visible {
+    outline: 2px solid rgba(0, 240, 255, 0.5);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* ── Custom Scrollbar ───────────────────────────── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  }
 }
 
 @layer components {
@@ -110,27 +138,146 @@
     z-index: 50;
     transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+
+  /* ── Skeleton Shimmer ─────────────────────────── */
+  .skeleton {
+    @apply relative overflow-hidden bg-white/5 rounded-xl;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.04) 40%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.04) 60%,
+      transparent 100%
+    );
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  /* ── Inline Toast / Feedback ──────────────────── */
+  .toast-success {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold;
+    background: rgba(212, 255, 0, 0.1);
+    color: #d4ff00;
+    border: 1px solid rgba(212, 255, 0, 0.2);
+    animation: scalePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .toast-error {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold;
+    background: rgba(255, 42, 95, 0.1);
+    color: #ff2a5f;
+    border: 1px solid rgba(255, 42, 95, 0.2);
+    animation: scalePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* ── Tooltip (collapsed sidebar) ─────────────── */
+  .sidebar-tooltip {
+    @apply absolute left-full ml-3 px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase whitespace-nowrap pointer-events-none z-[100];
+    background: #18181b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .sidebar-tooltip::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -4px;
+    transform: translateY(-50%);
+    border: 4px solid transparent;
+    border-right-color: rgba(255, 255, 255, 0.1);
+  }
+  .group:hover .sidebar-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ── Confirm Dialog ──────────────────────────── */
+  .confirm-overlay {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center;
+    animation: fadeIn 0.15s ease;
+  }
+  .confirm-dialog {
+    @apply bg-surface border border-white/10 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl;
+    animation: scalePop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 }
 
-/* Animations */
+/* ═══════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+
+/* Page entrance */
 .animate-in {
-  animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes slideUpFade {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.98);
+    transform: translateY(20px);
   }
-
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
+
+/* Scale pop (toasts, dialogs, dynamic elements) */
+@keyframes scalePop {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Skeleton shimmer sweep */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ── Stagger Delays ────────────────────────────── */
+/* Apply to list children for cascading entrance     */
+.stagger-in {
+  opacity: 0;
+  animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.stagger-in-1 { animation-delay: 50ms; }
+.stagger-in-2 { animation-delay: 100ms; }
+.stagger-in-3 { animation-delay: 150ms; }
+.stagger-in-4 { animation-delay: 200ms; }
+.stagger-in-5 { animation-delay: 250ms; }
+.stagger-in-6 { animation-delay: 300ms; }
+.stagger-in-7 { animation-delay: 350ms; }
+.stagger-in-8 { animation-delay: 400ms; }
 
 /* Textures */
 .text-edge {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
   color: transparent;
+}
+
+/* ── Reduced Motion ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

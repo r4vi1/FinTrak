@@ -1,8 +1,22 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
 import { Search, Filter, ArrowUpRight, ArrowDownRight, Tag } from "lucide-react";
 import { useTransactions, useAccounts, useCategories } from "../hooks/useApi";
 import { formatCurrency } from "../lib/utils";
+
+/* Skeleton row matching transaction card shape */
+function TransactionSkeleton() {
+    return (
+        <div className="surface-card p-4 rounded-xl flex items-center gap-4">
+            <div className="skeleton w-12 h-12 rounded-2xl shrink-0" />
+            <div className="flex-1 space-y-2">
+                <div className="skeleton h-5 w-2/5 rounded-lg" />
+                <div className="skeleton h-3 w-3/5 rounded-lg" />
+            </div>
+            <div className="skeleton h-6 w-20 rounded-lg" />
+        </div>
+    );
+}
 
 export default function Transactions() {
     // Filters state
@@ -13,8 +27,13 @@ export default function Transactions() {
     const [dateFrom, setDateFrom] = useState("");
     const [dateTo, setDateTo] = useState("");
 
-    // Debounce search state (for immediate input unblocking)
+    // Debounced search
     const [searchInput, setSearchInput] = useState("");
+
+    useEffect(() => {
+        const timer = setTimeout(() => setSearch(searchInput), 300);
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
     // Fetch data
     const { data: txData, isLoading: txLoading } = useTransactions({
@@ -26,12 +45,6 @@ export default function Transactions() {
     const accounts = accData?.accounts || [];
     const categories = catData?.categories || [];
     const transactions = txData?.transactions || [];
-
-    // Generic form to trigger API re-fetch on enter or blur
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        setSearch(searchInput);
-    };
 
     // Group transactions by date
     const groupedTransactions = useMemo(() => {
@@ -61,7 +74,7 @@ export default function Transactions() {
 
             {/* Filter Bar */}
             <div className="surface-card p-4 rounded-2xl mb-8 flex flex-wrap gap-4 items-center">
-                <form onSubmit={handleSearchSubmit} className="relative flex-1 min-w-[200px]">
+                <div className="relative flex-1 min-w-[200px]">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
                     <input
                         type="text"
@@ -69,9 +82,8 @@ export default function Transactions() {
                         className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-white focus:outline-none focus:border-accent-cyan transition-colors"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        onBlur={() => setSearch(searchInput)}
                     />
-                </form>
+                </div>
 
                 <div className="flex gap-3 overflow-x-auto pb-1 md:pb-0">
                     <select
@@ -120,7 +132,9 @@ export default function Transactions() {
             {/* Transactions List */}
             <div className="space-y-8">
                 {txLoading ? (
-                    <div className="text-center py-12 text-zinc-500 font-medium animate-pulse">Loading amazing financial data...</div>
+                    <div className="space-y-4">
+                        {[...Array(6)].map((_, i) => <TransactionSkeleton key={i} />)}
+                    </div>
                 ) : groupedTransactions.length === 0 ? (
                     <div className="text-center py-12 text-zinc-500 font-medium surface-card rounded-2xl">No transactions found for these filters.</div>
                 ) : (
@@ -130,11 +144,11 @@ export default function Transactions() {
                                 {getDateHeader(date)}
                             </h3>
                             <div className="space-y-3">
-                                {dayTxns.map(tx => {
+                                {dayTxns.map((tx, txIdx) => {
                                     const isCredit = tx.type === 'credit';
                                     return (
-                                        <div key={tx.id} className="surface-card p-4 rounded-xl flex items-center gap-4 hover:bg-white/5 transition-colors group cursor-pointer">
-                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isCredit ? 'bg-accent-lime/10 text-accent-lime' : 'bg-white/5 text-zinc-400'}`}>
+                                        <div key={tx.id} className={`surface-card p-4 rounded-xl flex items-center gap-4 hover:bg-white/5 transition-colors group cursor-pointer stagger-in stagger-in-${Math.min(txIdx + 1, 8)}`}>
+                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 ${isCredit ? 'bg-accent-lime/10 text-accent-lime' : 'bg-white/5 text-zinc-400'}`}>
                                                 {isCredit ? <ArrowDownRight size={24} /> : <ArrowUpRight size={24} />}
                                             </div>
 

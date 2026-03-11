@@ -76,7 +76,7 @@ export default function Analytics() {
                         <span className="font-bold text-xs uppercase tracking-widest">Avg Monthly Outflow</span>
                     </div>
                     {cashflowLoading ? (
-                        <div className="h-10 bg-white/5 animate-pulse rounded w-1/2"></div>
+                        <div className="skeleton h-10 w-1/2 rounded-xl"></div>
                     ) : (
                         <>
                             <p className="text-4xl font-display font-bold text-white mb-2">
@@ -94,7 +94,7 @@ export default function Analytics() {
                         <span className="font-bold text-xs uppercase tracking-widest">Avg Monthly Inflow</span>
                     </div>
                     {cashflowLoading ? (
-                        <div className="h-10 bg-white/5 animate-pulse rounded w-1/2"></div>
+                        <div className="skeleton h-10 w-1/2 rounded-xl"></div>
                     ) : (
                         <>
                             <p className="text-4xl font-display font-bold text-white mb-2">
@@ -112,7 +112,7 @@ export default function Analytics() {
                         <span className="font-bold text-xs uppercase tracking-widest">Fixed Recurring (Est)</span>
                     </div>
                     {recurringLoading ? (
-                        <div className="h-10 bg-white/5 animate-pulse rounded w-1/2"></div>
+                        <div className="skeleton h-10 w-1/2 rounded-xl"></div>
                     ) : (
                         <>
                             <p className="text-4xl font-display font-bold text-white mb-2">
@@ -152,7 +152,7 @@ export default function Analytics() {
                         </div>
 
                         {cashflowLoading ? (
-                            <div className="h-[300px] flex items-center justify-center text-zinc-500 animate-pulse">Loading cashflow data...</div>
+                            <div className="h-[300px] skeleton rounded-2xl"></div>
                         ) : (
                             <div className="h-[300px] w-full relative z-10">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -215,7 +215,7 @@ export default function Analytics() {
                         </div>
 
                         {merchantsLoading ? (
-                            <div className="py-12 text-center text-zinc-500 animate-pulse">Loading merchant data...</div>
+                            <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-16 rounded-xl"></div>)}</div>
                         ) : (
                             <div className="space-y-4">
                                 {topMerchants.map((merchant, idx) => {
@@ -224,7 +224,7 @@ export default function Analytics() {
                                     const widthPercent = Math.max(5, (merchant.total / maxTotal) * 100);
 
                                     return (
-                                        <div key={idx} className="relative group">
+                                        <div key={idx} className={`relative group stagger-in stagger-in-${Math.min(idx + 1, 5)}`}>
                                             {/* Background Tracker Bar */}
                                             <div className="absolute inset-0 bg-white/5 rounded-xl overflow-hidden">
                                                 <div
@@ -264,7 +264,7 @@ export default function Analytics() {
                         </div>
 
                         {categoryLoading ? (
-                            <div className="h-[250px] flex items-center justify-center text-zinc-500 animate-pulse">Loading categories...</div>
+                            <div className="h-[250px] skeleton rounded-2xl"></div>
                         ) : (
                             <>
                                 <div className="h-[220px] w-full">
@@ -315,13 +315,13 @@ export default function Analytics() {
                         </div>
 
                         {recurringLoading ? (
-                            <div className="py-6 text-center text-zinc-500 animate-pulse">Scanning subscriptions...</div>
+                            <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-12 rounded-xl"></div>)}</div>
                         ) : recurring.length === 0 ? (
                             <div className="py-6 text-center text-zinc-500 text-sm">No recurring expenses detected yet.</div>
                         ) : (
                             <div className="space-y-4">
                                 {recurring.map((item, idx) => (
-                                    <div key={idx} className="flex items-center justify-between border-b last:border-0 border-white/5 pb-3">
+                                    <div key={idx} className={`flex items-center justify-between border-b last:border-0 border-white/5 pb-3 stagger-in stagger-in-${Math.min(idx + 1, 5)}`}>
                                         <div>
                                             <p className="font-bold text-sm text-zinc-200">{item.merchant}</p>
                                             <p className="text-[10px] text-[#22c55e] uppercase tracking-widest font-bold mt-0.5">Auto-Renewing</p>

@@ -23,7 +23,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             {/* Collapse Toggle */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-8 bg-zinc-800 border border-zinc-700 rounded-full p-1 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors z-50"
+                className="absolute -right-3 top-8 bg-zinc-800 border border-zinc-700 rounded-full p-1 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all duration-200 z-50 hover:scale-110"
             >
                 {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
             </button>
@@ -60,13 +60,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                             to={item.path}
                             className={({ isActive }) =>
                                 cn(
-                                    "group flex items-center rounded-2xl transition-all duration-300 relative overflow-hidden",
+                                    "group flex items-center rounded-2xl transition-all duration-300 relative overflow-visible",
                                     isCollapsed ? "justify-center p-3" : "gap-4 px-4 py-3.5",
                                     "text-zinc-500 font-medium hover:text-white hover:bg-white/5",
                                     isActive && "bg-elevated border border-white/5 text-white shadow-lg"
                                 )
                             }
-                            title={isCollapsed ? item.label : undefined}
                         >
                             {({ isActive }) => (
                                 <>
@@ -87,7 +86,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
 
                                     {/* Active highlight bg */}
                                     {isActive && (
-                                        <div className="absolute inset-0 bg-gradient-to-r from-accent-lime/10 to-transparent opacity-50" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-accent-lime/10 to-transparent opacity-50 rounded-2xl" />
+                                    )}
+
+                                    {/* Tooltip when collapsed */}
+                                    {isCollapsed && (
+                                        <span className="sidebar-tooltip">{item.label}</span>
                                     )}
                                 </>
                             )}
