@@ -31,17 +31,25 @@ export default function DashboardLayout() {
     const animatedNetWorth = useCountUp(netWorthData?.net_worth, 1500);
 
     const [mounted, setMounted] = useState(false);
-    const [layouts, setLayouts] = useState(() => {
-        const saved = localStorage.getItem("fintrak_dashboard_layout_v2");
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                return { lg: DEFAULT_LAYOUT };
-            }
+const [layouts, setLayouts] = useState(() => {
+    const saved = localStorage.getItem("fintrak_dashboard_layout_v2");
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            return {
+                lg: DEFAULT_LAYOUT,
+                sm: DEFAULT_LAYOUT,
+                xs: DEFAULT_LAYOUT
+            };
         }
-        return { lg: DEFAULT_LAYOUT };
-    });
+    }
+    return {
+  lg: DEFAULT_LAYOUT,
+  sm: DEFAULT_LAYOUT,
+  xs: DEFAULT_LAYOUT
+};
+});
     const [isEditMode, setIsEditMode] = useState(false);
 
     useEffect(() => {
