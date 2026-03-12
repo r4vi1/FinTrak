@@ -1,52 +1,55 @@
 # Contributing to FinTrak
 
-Thanks for the interest! Here's the deal.
+First off, thank you for considering contributing to FinTrak! It's people like you that make FinTrak a great personal finance tool for the community.
 
-## Ground rules
+## Where do I go from here?
 
-- **Keep it simple.** This is a full-stack JS app, not a NASA project. Don't introduce frameworks or abstractions unless there's a clear win.
-- **One thing per PR.** Bug fix? Feature? Refactor? Pick one. Makes reviews way easier.
-- **Test what you break.** No test suite yet (I know, I know), but at minimum make sure `npm run db:migrate` and the dev server still start.
+If you've noticed a bug or have a feature request, [make one](https://github.com/r4vi1/FinTrak/issues/new)! It's generally best if you get confirmation of your bug or approval for your feature request this way before starting to code.
 
-## Getting set up
+If you're looking for an issue to pick up, we try to label beginner-friendly issues with the `good first issue` or `help wanted` tags.
 
-```bash
-git clone https://github.com/r4vi1/FinTrak.git
-cd FinTrak
-npm install
-cd client && npm install && cd ..
-npm run db:migrate
-npm run db:seed
-```
+## Fork & create a branch
 
-You now have a working app with seed data. Backend on `:3001`, frontend on `:5173`.
+If the issue you're working on is confirmed or you already know what to do, get the code on your local machine:
 
-## What to work on
+1. Fork the repository
+2. Clone your fork locally
+3. Create a branch: `git checkout -b your-branch-name`
 
-Check the [issues](https://github.com/r4vi1/FinTrak/issues) tab. Anything tagged `good first issue` is fair game.
+## Setting up your local environment
 
-Some areas that could use help:
-- **Mobile responsive** — the layout is desktop-first right now
-- **Tests** — we have literally zero. Unit tests for the category engine would be a great start
-- **Accessibility** — screen reader support, keyboard nav, color contrast
-- **Documentation** — API docs, JSDoc comments, anything that makes the codebase more approachable
+FinTrak uses a Node.js backend with SQLite and a React/Vite frontend.
 
-## Submitting a PR
+1. Install dependencies for both the server and the client:
+   ```bash
+   npm install
+   cd client && npm install
+   cd ..
+   ```
+2. Start the development environment:
+   ```bash
+   npm start
+   ```
+   This command starts both the Express server (port 5000) and the Vite frontend development server concurrently.
 
-1. Fork the repo
-2. Create a branch (`git checkout -b fix/something-broken`)
-3. Make your changes
-4. Push to your fork and open a PR against `main`
+## Coding Guidelines
 
-I'll try to review within a couple days. If it's been a week and you haven't heard back, ping me.
+We want to keep the codebase clean, legible, and "vibe coded". 
 
-## Style
+- **Formatting:** We use Prettier for code formatting. Please ensure your editor is configured to use it, or run formatting commands before you commit.
+- **Component Style:** We use standard React functional components. For styling, we primarily rely on TailwindCSS for responsive layouts.
 
-- No semicolons in JS (or do use them, I don't care, just be consistent within the file you're editing)
-- React functional components only
-- camelCase for JS, kebab-case for CSS classes
-- Commit messages: imperative mood, keep it under 72 chars. `Fix currency formatting for large numbers` not `fixed stuff`
+## Committing and Pushing
 
-## Questions?
+Once you've made your changes:
 
-Open an issue or ping me. Don't overthink it.
+1. Stage your changes: `git add .`
+2. Commit your changes. Try to clearly describe what your commit does (e.g., `git commit -m "fix: sidebar responsive layout on mobile"`).
+3. Push to your branch: `git push origin your-branch-name`
+4. Open a Pull Request from your fork to the main `FinTrak` repository!
+
+## Code of Conduct
+
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms. Be welcoming and respectful to everyone.
+
+Thank you for contributing!

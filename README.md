@@ -135,9 +135,14 @@ New transactions from AA syncs get auto-tagged too.
 - [ ] Mobile-responsive layout cleanup
 - [ ] PostgreSQL production config + Docker Compose
 
-## Contributing
+## Contributing 🤝
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: fork, branch, PR. Keep it clean.
+We **love** contributions from the community! Whether you're fixing bugs, improving the documentation, or adding new features, your help makes FinTrak better for everyone. Open source is about collaboration, and we're excited to have you on board.
+
+- **First time contributing?** Look for issues labeled with [`good first issue`](https://github.com/r4vi1/FinTrak/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) to get properly onboarded and familiar with the codebase.
+- **Ready to dive in?** Check out our detailed [CONTRIBUTING.md](CONTRIBUTING.md) guide for environment setup instructions, coding conventions, and PR guidelines.
+
+Short version: fork, branch, write clean code, and open a PR! We try to review all pull requests within 48 hours.
 
 ## License
 
