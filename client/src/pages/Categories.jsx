@@ -130,22 +130,27 @@ export default function Categories() {
     };
 
     const handleDelete = async (id) => {
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: "DELETE"
-            });
-            if (response.ok) {
-                showFeedback('success', 'Category deleted');
-                refetch();
-            } else {
-                const res = await response.json();
-                showFeedback('error', res.error);
-            }
-        } catch (err) {
-            showFeedback('error', err.message);
+    const category = categories.find(c => c.id === id)
+    if (category?.is_system) {
+        showFeedback('error', "Cannot delete system category")
+        setConfirmDelete(null)
+        return
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" })
+        if (response.ok) {
+            showFeedback('success', 'Category deleted')
+            refetch()
+        } else {
+            const res = await response.json()
+            showFeedback('error', res.error)
         }
-        setConfirmDelete(null);
-    };
+    } catch (err) {
+        showFeedback('error', err.message)
+    }
+    setConfirmDelete(null)
+}
 
     return (
         <div className="animate-in pt-6 pb-12 min-h-screen">
@@ -349,7 +354,7 @@ export default function Categories() {
             {/* Confirm Delete Dialog */}
             {confirmDelete && (
                 <ConfirmDialog
-                    message="This will remove the category and uncategorize all associated transactions."
+                    message={`This will remove the category "${categories.find(c => c.id === confirmDelete)?.name}" and uncategorize all associated transactions.`}
                     onConfirm={() => handleDelete(confirmDelete)}
                     onCancel={() => setConfirmDelete(null)}
                 />

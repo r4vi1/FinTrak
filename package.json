@@ -10,7 +10,13 @@
     "server": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["personal-finance", "india", "account-aggregator", "dashboard", "budgeting"],
+  "keywords": [
+    "personal-finance",
+    "india",
+    "account-aggregator",
+    "dashboard",
+    "budgeting"
+  ],
   "author": "Ravi Varma <r4vi.varma@gmail.com>",
   "license": "MIT",
   "description": "Cross-account personal finance dashboard for India",
