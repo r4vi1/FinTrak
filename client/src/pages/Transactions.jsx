@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
-import { Search, Filter, ArrowUpRight, ArrowDownRight, Tag } from "lucide-react";
+import { Search, ArrowUpRight, ArrowDownRight, Tag } from "lucide-react";
 import { useTransactions, useAccounts, useCategories } from "../hooks/useApi";
 import { formatCurrency } from "../lib/utils";
 
@@ -29,6 +29,7 @@ export default function Transactions() {
 
     // Debounced search
     const [searchInput, setSearchInput] = useState("");
+    const hasActiveCoreFilters = Boolean(searchInput.trim() || accountId || categoryId);
 
     useEffect(() => {
         const timer = setTimeout(() => setSearch(searchInput), 300);
@@ -118,14 +119,19 @@ export default function Transactions() {
                         <option value="credit">Inflows</option>
                     </select>
 
-                    <button
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-medium"
-                        onClick={() => {
-                            setSearch(""); setSearchInput(""); setAccountId(""); setCategoryId(""); setType(""); setDateFrom(""); setDateTo("");
-                        }}
-                    >
-                        <Filter size={16} /> Clear
-                    </button>
+                    {hasActiveCoreFilters && (
+                        <button
+                            className="px-3 py-2 rounded-xl bg-transparent border border-white/10 hover:bg-white/5 transition-colors text-sm text-zinc-300"
+                            onClick={() => {
+                                setSearch("");
+                                setSearchInput("");
+                                setAccountId("");
+                                setCategoryId("");
+                            }}
+                        >
+                            Clear Filters
+                        </button>
+                    )}
                 </div>
             </div>
 
